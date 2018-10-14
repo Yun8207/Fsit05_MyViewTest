@@ -15,14 +15,17 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="clear"/>
+            android:text="clear"
+            android:onClick="clear"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="undo"/>
+            android:text="undo"
+            android:onClick="undo"/>
 
     </LinearLayout>
     <tw.alex.myviewtest.MyView
+        android:id="@+id/myView"
         android:layout_width="0dp"
         android:layout_weight="5"
         android:layout_height="match_parent"
