@@ -19,11 +19,12 @@ public class MyView extends View {
     private LinkedList<LinkedList<HashMap<String,Float>>> lines;
     private GestureDetector gd;
     private Paint paint = new Paint();
+    private float strokewidth;
 
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint.setColor(Color.BLUE);
-        paint.setStrokeWidth(10);
+        paint.setStrokeWidth(40);
 
         lines = new LinkedList<>();
 
@@ -52,8 +53,11 @@ public class MyView extends View {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             float distance;
-            //distance = (Math.pow(distanceX, 2) + (Math.pow(distanceY,2)));
-            paint.setStrokeWidth(10);
+            distance = (float)(Math.pow(Math.pow(distanceX, 2) + Math.pow(distanceY,2), 0.5));
+
+            strokewidth =  20*(1/distance);
+            //paint.setStrokeWidth(40*(1/distance));
+
 
 
 
@@ -87,14 +91,16 @@ public class MyView extends View {
 
         //Log.v("alex","onDraw()");
 
-
+        paint.setStrokeWidth(strokewidth);
 
 
         for(LinkedList<HashMap<String,Float>> line : lines) {
             for (int i = 1; i < line.size(); i++) {
                 HashMap<String, Float> p0 = line.get(i - 1);
                 HashMap<String, Float> p1 = line.get(i);
+
                 canvas.drawLine(p0.get("x"), p0.get("y"), p1.get("x"), p1.get("y"), paint);
+                paint.setStrokeWidth(p1.get("width"));
             }
         }
     }
@@ -103,23 +109,24 @@ public class MyView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float ex = event.getX();
         float ey = event.getY();
+        float width = strokewidth;
 
         HashMap<String,Float> point = new HashMap<>();
-        point.put("x", ex); point.put("y", ey);
+        point.put("x", ex); point.put("y", ey); point.put("width", width);
 
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
-               // Log.v("alex","dow:" + ex + "x" + ey);
+                // Log.v("alex","dow:" + ex + "x" + ey);
                 LinkedList<HashMap<String,Float>> line = new LinkedList<>();
                 line.add(point);
                 lines.add(line);
 
                 break;
             case MotionEvent.ACTION_UP:
-               // Log.v("alex", "up" + ex + "x" + ey);
+                // Log.v("alex", "up" + ex + "x" + ey);
                 break;
             case MotionEvent.ACTION_MOVE:
-               // Log.v("alex", "move: " + ex + "x" + ey);
+                // Log.v("alex", "move: " + ex + "x" + ey);
                 lines.getLast().add(point);
                 break;
         }
